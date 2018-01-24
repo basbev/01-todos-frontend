@@ -1,4 +1,4 @@
-# 01-todos-frontend
+﻿# 01-todos-frontend
 
 ![Todos](https://raw.githubusercontent.com/AdvWebDevelopment/01-todos-frontend/master/static/todos.png)
 
@@ -44,7 +44,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 * [x] Challenge 3
 * [x] Challenge 4
 * [x] Challenge 5
-* [ ] Challenge 6
+* [X] Challenge 6
 * [ ] Challenge 7
 * [ ] Challenge 8
 
