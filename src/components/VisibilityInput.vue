@@ -13,13 +13,17 @@
         native-value="completed">
         <span>Completed</span>
       </b-radio-button>
+    <button class="button is-dark" @click="CLEAR_TODO">
+      <b-icon icon="check"></b-icon>
+      <span>Clear</span>
+    </button>
     </b-field>
   </div>
 </template>
 
 <script>
 import { store } from '@/store'
-
+import { mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
     visibility: {
@@ -28,8 +32,12 @@ export default {
       },
       set: function (newValue) {
         store.dispatch('changeVisibility', newValue)
-      }
+      },
+      ...mapGetters(['todos', 'visibility'])
     }
+  },
+  methods: {
+    ...mapActions(['CLEAR_TODO'])
   }
 }
 </script>
