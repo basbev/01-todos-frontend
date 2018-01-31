@@ -7,7 +7,7 @@
           <span v-else>{{ todo.title }}</span>
         </b-checkbox>
       </b-field>
-      <a class="delete is-pulled-right" @click="DELETE_TODO(index)"</a>
+      <a class="delete is-pulled-right" @click="DELETE_TODO(index)"></a>
       <div class="is-clearfix"></div>
     </div>
   </div>
