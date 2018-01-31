@@ -1,13 +1,10 @@
 <template>
-  <div>
-    <div v-for="(todo , index) in todos" :key="todo.title" v-if="checkTodo(todo)">
+  <div v-sortable="{onEnd: reorder}">
+    <div v-for="(todo, index) in todos" :key="todo.title" v-show="(visibility === 'all') || (visibility === 'active' && todo.completed === false) || (visibility === 'completed' && todo.completed === true)">
       <b-field class="is-pulled-left">
-        <b-checkbox size="is-large" v-model="todo.complete" @input="checkbox(index)">
-          <strike v-if="todo.completed">{{ todo.title }}</strike>
-          <span v-else>{{ todo.title }}</span>
-        </b-checkbox>
+        <b-checkbox  @input="line(index)" size="is-large" v-bind:class="{ 'line': todo.completed }">{{ todo.title }}</b-checkbox>
       </b-field>
-      <a class="delete is-pulled-right" @click="DELETE_TODO(index)"></a>
+      <a class="delete is-pulled-right" @click="deleteTodo(index)" ></a>
       <div class="is-clearfix"></div>
     </div>
   </div>
@@ -15,23 +12,28 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+
 export default {
   computed: {
-    ...mapGetters(['todos',
-      'visibility'
-    ])
+    ...mapGetters(['todos', 'visibility'])
   },
   methods: {
-    ...mapActions(['DELETE_TODO', 'CLEAR_TODO', 'checkbox']),
-    checkTodo (todo) {
-      if (this.visibility === 'all') {
-        return true
-      } else if (this.visibility === 'active' && todo.completed === false) {
-        return true
-      } else if (this.visibility === 'completed' && todo.completed === true) {
-        return true
-      } else return false
-    }
+    ...mapActions([
+      'deleteTodo',
+      'line',
+      'load',
+      'reorder'
+    ])
+  },
+  created () {
+    this.load()
   }
 }
 </script>
+
+<style scoped>
+  .line {
+    text-decoration:line-through;
+  }
+</style>
+

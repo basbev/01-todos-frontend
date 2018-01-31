@@ -1,28 +1,34 @@
 <template>
   <div>
-    <p class="is-pulled-left">{{countTodos}} items left</p>
-    <visibility-input/>
+    <div class="columns">
+      <div class="column ">
+        <p class="is-pulled-left"> {{count}} items left</p>
+        <visibility-input/>
+        <center><button class="button" style="background-color:#FF6600" @click="clearCompeleted()">Clear</button></center>
+      </div>
+
+    </div>
+    <div class="columns">
+      <div class="column is-4">
+
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import VisibilityInput from '@/components/VisibilityInput'
+import { mapGetters, mapActions } from 'vuex'
 export default {
   components: {
     VisibilityInput
   },
   computed: {
-    ...mapGetters(['todos']),
-    countTodos () {
-      var count = 0
-      for (let i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].completed === false) {
-          count += 1
-        }
-      }
-      return count
-    }
+    ...mapGetters(['count', 'countActives', 'countCompleted'])
+  },
+  methods: {
+    ...mapActions(['clearCompeleted'])
   }
 }
 </script>

@@ -10,12 +10,6 @@ export const store = new Vuex.Store({
     visibility: 'all'
   },
   mutations: {
-    checkbox (state, index) {
-      state.todos[index].completed = !state.todos[index].completed
-    },
-    DELETE_TODO (state, index) {
-      state.todos.splice(index, 1)
-    },
     ADD_TODO (state, title) {
       state.todos.push({
         title,
@@ -25,33 +19,61 @@ export const store = new Vuex.Store({
     CHANGE_VISIBILITY (state, newVisibilityValue) {
       state.visibility = newVisibilityValue
     },
-    CLEAR (state) {
-      for (let i = state.todos.length - 1; i >= 0; i--) {
-        if (state.todos[i].completed === true) {
-          state.todos.splice(i, 1)
-        }
-      }
+    DELETE_TODO (state, index) {
+      state.todos.splice(index, 1)
+    },
+    TOGGLE_TODO (state, index) {
+      state.todos[index].completed = !state.todos[index].completed
+    },
+    CLEAR_COMPELETED_TODO (state) {
+      state.todos = state.todos.filter(todo => todo.completed === false)
+    },
+    LOAD (state, todos) {
+      state.todos = todos
+    },
+    REORDER (state, {oldIndex, newIndex}) {
+      const movedItem = state.todos.splice(oldIndex, 1)[0]
+      state.todos.splice(newIndex, 0, movedItem)
     }
   },
   actions: {
-    checkbox ({commit}, index) {
-      commit('checkbox', index)
-    },
-    addTodo ({commit}, title) {
+    addTodo ({commit, dispatch}, title) {
       commit('ADD_TODO', title)
-    },
-    CLEAR_TODO ({state, commit}) {
-      commit('CLEAR')
+      dispatch('save')
     },
     changeVisibility ({commit}, newVisibilityValue) {
       commit('CHANGE_VISIBILITY', newVisibilityValue)
     },
-    DELETE_TODO ({commit}, newVisibilityValue) {
-      commit('DELETE_TODO', newVisibilityValue)
+    deleteTodo ({commit, dispatch}, index) {
+      commit('DELETE_TODO', index)
+      dispatch('save')
+    },
+    line ({commit, dispatch}, index) {
+      commit('TOGGLE_TODO', index)
+      dispatch('save')
+    },
+    clearCompeleted ({commit, dispatch}) {
+      commit('CLEAR_COMPELETED_TODO')
+      dispatch('save')
+    },
+    save ({state}) {
+      localStorage.setItem('todos', JSON.stringify(state.todos))
+    },
+    load ({commit}) {
+      let todos = localStorage.getItem('todos')
+      if (todos != null) {
+        commit('LOAD', JSON.parse(todos))
+      }
+    },
+    reorder ({commit}, {oldIndex, newIndex}) {
+      commit('REORDER', {oldIndex, newIndex})
     }
   },
   getters: {
     todos: state => state.todos,
-    visibility: state => state.visibility
+    visibility: state => state.visibility,
+    count: state => state.todos.length,
+    countActives: state => state.todos.filter(todo => todo.completed === false).length,
+    countCompleted: state => state.todos.filter(todo => todo.completed === true).length
   }
 })

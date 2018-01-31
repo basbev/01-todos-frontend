@@ -3,56 +3,35 @@
     <b-field class="is-pulled-right">
       <b-radio-button v-model="visibility"
         native-value="all">
-        <span>All ({{all}})</span>
+        <span>All ({{count}})</span>
       </b-radio-button>
       <b-radio-button v-model="visibility"
         native-value="active">
-        <span>Active ({{all - completed}})</span>
+        <span>Active ({{countActives}})</span>
       </b-radio-button>
       <b-radio-button v-model="visibility"
         native-value="completed">
-        <span>Completed ({{completed}})</span>
+        <span>Completed ({{countCompleted}})</span>
       </b-radio-button>
-    <button class="button is-dark" @click="CLEAR_TODO">
-      <b-icon icon="check"></b-icon>
-      <span>Clear</span>
-    </button>
     </b-field>
   </div>
 </template>
 
 <script>
 import { store } from '@/store'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
+
 export default {
   computed: {
-    ...mapGetters(['todos']),
-    all () {
-      if (this.todos) {
-        return this.todos.length
-      } else return 0
-    },
-    completed () {
-      let count = 0
-      for (let i = 0; this.todos && i < this.todos.length; i++) {
-        if (this.todos[i].completed) {
-          count++
-        }
-      }
-      return count
-    },
+    ...mapGetters(['count', 'countActives', 'countCompleted']),
     visibility: {
       get: function () {
         return store.state.visibility
       },
       set: function (newValue) {
         store.dispatch('changeVisibility', newValue)
-      },
-      ...mapGetters(['todos', 'visibility'])
+      }
     }
-  },
-  methods: {
-    ...mapActions(['CLEAR_TODO'])
   }
 }
 </script>
